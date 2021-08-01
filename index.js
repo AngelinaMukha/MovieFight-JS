@@ -5,37 +5,42 @@ const fetchData = async(searchTerm)=>{
             s: searchTerm
         }
     });
-    const divExists=document.body.querySelector('#target div');
-    if(divExists){
-        var divs = document.getElementById("target");
-        while (divs.firstChild) {
-            divs.removeChild(divs.firstChild);
-        }
-    }
     if(response.data.Error){
-        const target = document.querySelector('#target');
-        const div =document.createElement('div');
-        div.innerHTML =`
-        <h1>Not found</h1>
-        `;
-        target.appendChild(div);
         return [];
     }
     return response.data.Search;
 };
 
+const root = document.querySelector('.autocomlete');
+root.innerHTML=`
+    <label><b>Search For a Movie</b></label>
+    <input class="input"/>
+    <div class="dropdown">
+        <div class="dropdown-menu">
+            <div class="dropdown-content results">
+                
+            </div>
+        </div>
+    </div>
+
+`;
 const input = document.querySelector('input');
+const dropdown = document.querySelector('.dropdown');
+const resultsWrapper = document.querySelector('.results');
 
 const onInput = async (event) => {
     let movies = await fetchData(event.target.value);
+    resultsWrapper.innerHTML='';
+    dropdown.classList.add('is-active');
     for(let movie of movies){
-        const target = document.querySelector('#target');
-        const div =document.createElement('div');
-        div.innerHTML =`
-        <img src="${movie.Poster}"/>
-        <h1>${movie.Title}</h1>
+        const option =document.createElement('a');
+        const imgSrc = movie.Poster ==='N/A' ? '' : movie.Poster;
+        option.classList.add('dropdown-item');
+        option.innerHTML =`
+        <img src="${imgSrc}"/>
+        ${movie.Title}
         `;
-        target.appendChild(div);
+        resultsWrapper.appendChild(option);
     }
 };
 input.addEventListener('input', debounce(onInput, 1000));
