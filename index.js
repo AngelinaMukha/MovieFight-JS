@@ -69,7 +69,7 @@ const runComparison = ()=>{
 
         const leftSideValue = parseInt(leftStat.dataset.value);
         const rightSideValue = parseInt(rightStat.dataset.value);
-        if(leftSideValue>rightSideValue){
+        if(rightSideValue>leftSideValue){
             leftStat.classList.remove('is-primary');
             leftStat.classList.add('is-warning');
         }else{
